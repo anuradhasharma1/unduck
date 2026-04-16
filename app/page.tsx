@@ -5,23 +5,26 @@ export default function Home() {
   const [input, setInput] = useState("");
 
   const handleSearch = () => {
-    if (!input.startsWith("!")) return;
+    const trimmed = input.trim();
 
-    const [cmd, ...rest] = input.slice(1).split(" ");
-    const query = rest.join(" ");
+    if (!trimmed.startsWith("!")) return;
 
-    let url = " ";
+    const parts = trimmed.slice(1).split(" ");
+    const cmd = parts[0];
+    const query = parts.slice(1).join(" ");
 
-    if (cmd === "leet") {
-      url = `https://leetcode.com/problemset/?search=${query}`;
-    } else if (cmd === "yt") {
-      url = `https://www.youtube.com/results?search_query=${query}`;
-    } else if (cmd === "gate") {
-      url = `https://www.google.com/search?q=gate+${query}`;
-    }
+    const commands: Record<string, string> = {
+      leet: "https://leetcode.com/problemset/?search=",
+      yt: "https://www.youtube.com/results?search_query=",
+      gate: "https://www.google.com/search?q=gate+",
+    };
 
-    if (url) {
-      window.location.href = url;
+    const baseUrl = commands[cmd];
+
+    if (baseUrl) {
+      const finalUrl = baseUrl + encodeURIComponent(query);
+      window.location.href = finalUrl;
+      setInput("");
     } else {
       alert("Command not found");
     }
@@ -34,7 +37,10 @@ export default function Home() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") handleSearch();
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleSearch();
+          }
         }}
         placeholder="Type !leet dp"
         className="w-100 p-4 rounded-xl bg-zinc-900 border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-white"
