@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { commands } from "@/lib/commands";
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -10,19 +11,13 @@ export default function Home() {
     if (!trimmed.startsWith("!")) return;
 
     const parts = trimmed.slice(1).split(" ");
-    const cmd = parts[0];
+    const cmd = parts[0].toLowerCase();
     const query = parts.slice(1).join(" ");
-
-    const commands: Record<string, string> = {
-      leet: "https://leetcode.com/problemset/?search=",
-      yt: "https://www.youtube.com/results?search_query=",
-      gate: "https://www.google.com/search?q=gate+",
-    };
 
     const baseUrl = commands[cmd];
 
     if (baseUrl) {
-      const finalUrl = baseUrl + encodeURIComponent(query);
+      const finalUrl = query ? baseUrl + encodeURIComponent(query) : baseUrl;
       window.location.href = finalUrl;
       setInput("");
     } else {
