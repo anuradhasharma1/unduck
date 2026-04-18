@@ -5,6 +5,10 @@ import { commands } from "@/lib/commands";
 export default function Home() {
   const [input, setInput] = useState("");
 
+  const filteredCommands = Object.keys(commands).filter((cmd) =>
+    cmd.startsWith(input.replace("!", "").toLowerCase()),
+  );
+
   const handleSearch = () => {
     const trimmed = input.trim();
 
@@ -27,19 +31,35 @@ export default function Home() {
 
   return (
     <main className="flex items-center justify-center h-screen bg-black text-white">
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            handleSearch();
-          }
-        }}
-        placeholder="Type !leet dp"
-        className="w-100 p-4 rounded-xl bg-zinc-900 border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-white"
-      />
+      <div className="relative w-100">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleSearch();
+            }
+          }}
+          placeholder="Type !leet dp"
+          className="w-100 p-4 rounded-xl bg-zinc-900 border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-white"
+        />
+
+        {input.startsWith("!") && filteredCommands.length > 0 && (
+          <div className="absolute mt-2 w-100 bg-zinc-900 border border-zinc-700 rounded-xl">
+            {filteredCommands.map((cmd) => (
+              <div
+                key={cmd}
+                className="p-3 hover:bg-zinc-800 cursor-pointer"
+                onClick={() => setInput(`!${cmd} `)}
+              >
+                {cmd}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </main>
   );
 }
