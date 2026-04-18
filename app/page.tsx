@@ -47,7 +47,7 @@ export default function Home() {
         />
 
         {input.startsWith("!") && filteredCommands.length > 0 && (
-          <div className="absolute mt-2 w-100 bg-zinc-900 border border-zinc-700 rounded-xl">
+          <div className="absolute mt-2 w-full bg-zinc-900 border border-zinc-700 rounded-xl max-h-48 overflow-y-auto">
             {filteredCommands.map((cmd) => (
               <div
                 key={cmd}
